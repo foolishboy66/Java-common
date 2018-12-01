@@ -1,5 +1,7 @@
 package com.foolishboy.common.utils;
 
+import java.util.Iterator;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -10,8 +12,10 @@ import org.apache.commons.lang3.ArrayUtils;
  */
 public class StringUtil {
 
-	private StringUtil() {
+	private static final String EMPTY_STR = "";
+	private static final int NOT_FOUND_INDEX = -1;
 
+	private StringUtil() {
 	}
 
 	/**
@@ -183,6 +187,195 @@ public class StringUtil {
 			return str;
 		}
 		return new String(chs, 0, index);
+	}
+
+	/**
+	 * 将可被迭代对象(list、array、set等)的迭代器中元素用分隔符连接起来
+	 * 
+	 * @param iterator
+	 * @param separator
+	 * @return
+	 */
+	public static String join(final Iterator<?> iterator, final CharSequence separator) {
+
+		if (iterator == null) {
+			return null;
+		}
+
+		if (!iterator.hasNext()) {
+			return EMPTY_STR;
+		}
+
+		Object first = iterator.next();
+		StringBuilder sb = new StringBuilder();
+		if (first != null) {
+			sb.append(first);
+		}
+		while (iterator.hasNext()) {
+			if (separator != null) {
+				sb.append(separator);
+			}
+			Object next = iterator.next();
+			if (next != null) {
+				sb.append(iterator.next());
+			}
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * 将可被迭代的对象(list、array、set等)用分隔符连接起来
+	 * 
+	 * @param it
+	 * @param separator
+	 * @return
+	 */
+	public static String join(final Iterable<? extends CharSequence> it, final CharSequence separator) {
+
+		Iterator<? extends CharSequence> iterator = it.iterator();
+		if (iterator == null) {
+			return null;
+		}
+
+		if (!iterator.hasNext()) {
+			return EMPTY_STR;
+		}
+
+		CharSequence first = iterator.next();
+		StringBuilder sb = new StringBuilder();
+		if (first != null) {
+			sb.append(first);
+		}
+		while (iterator.hasNext()) {
+			if (separator != null) {
+				sb.append(separator);
+			}
+			CharSequence next = iterator.next();
+			if (next != null) {
+				sb.append(iterator.next());
+			}
+		}
+
+		return sb.toString();
+	}
+
+	/**
+	 * 返回字符串指定index左边的部分
+	 * 
+	 * @param str
+	 * @param index
+	 * @return
+	 */
+	public static String left(final String str, final int index) {
+
+		if (str == null || index < 0) {
+			return null;
+		}
+
+		if (index >= str.length()) {
+			return str;
+		}
+
+		return str.substring(0, index);
+	}
+
+	/**
+	 * 返回字符串最早出现指定子串左边的部分
+	 * 
+	 * @param str
+	 * @param separator
+	 * @return
+	 */
+	public static String firstLeftOf(final String str, final String separator) {
+
+		if (str == null || isEmpty(separator)) {
+			return null;
+		}
+		int index = str.indexOf(separator);
+
+		return left(str, index);
+	}
+
+	/**
+	 * 返回字符串最晚出现指定子串左边的部分
+	 * 
+	 * @param str
+	 * @param separator
+	 * @return
+	 */
+	public static String lastLeftOf(final String str, final String separator) {
+
+		if (str == null || isEmpty(separator)) {
+			return null;
+		}
+		int index = str.lastIndexOf(separator);
+
+		return left(str, index);
+	}
+
+	/**
+	 * 返回字符串指定index右边的部分
+	 * 
+	 * @param str
+	 * @param index
+	 * @return
+	 */
+	public static String right(final String str, final int index) {
+
+		if (str == null || index >= (str.length() - 1)) {
+			return null;
+		}
+
+		if (index < 0) {
+			return str;
+		}
+
+		return str.substring(index + 1, str.length());
+	}
+
+	/**
+	 * 返回字符串最早出现指定子串右边的部分
+	 * 
+	 * @param str
+	 * @param index
+	 * @return
+	 */
+	public static String firstRightOf(final String str, final String separator) {
+
+		if (str == null || isEmpty(separator)) {
+			return null;
+		}
+		int index = str.indexOf(separator);
+		if (index == NOT_FOUND_INDEX) {
+			return EMPTY_STR;
+		}
+
+		index += separator.length() - 1;
+
+		return right(str, index);
+	}
+
+	/**
+	 * 返回字符串最晚出现指定子串右边的部分
+	 * 
+	 * @param str
+	 * @param index
+	 * @return
+	 */
+	public static String lastRightOf(final String str, final String separator) {
+
+		if (str == null || isEmpty(separator)) {
+			return null;
+		}
+		int index = str.lastIndexOf(separator);
+		if (index == NOT_FOUND_INDEX) {
+			return EMPTY_STR;
+		}
+
+		index += separator.length() - 1;
+
+		return right(str, index);
 	}
 
 }
