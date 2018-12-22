@@ -2,7 +2,7 @@ package com.foolishboy.common;
 
 import com.foolishboy.common.utils.StringUtil;
 
-public class UtilTest {
+public class StringUtilTest {
 
 	public static void main(String[] args) {
 
