@@ -64,7 +64,7 @@ public class DateUtil {
 		return dateFormat;
 	}
 
-	private static Date addTime(Date date, int field, int amount) {
+	private static Date addTime(final Date date, final int field, final int amount) {
 
 		checkDateNotNull(date);
 		Calendar calendar = Calendar.getInstance();
@@ -73,17 +73,12 @@ public class DateUtil {
 		return calendar.getTime();
 	}
 
-	private static Date minusTime(Date date, int field, int amount) {
+	private static Date minusTime(final Date date, final int field, final int amount) {
 
-		checkDateNotNull(date);
-		amount = -amount;
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
-		calendar.add(field, amount);
-		return calendar.getTime();
+		return addTime(date, field, -amount);
 	}
 
-	private static void checkDateNotNull(Date... dates) {
+	private static void checkDateNotNull(final Date... dates) {
 
 		for (Date date : dates) {
 			if (date == null) {
@@ -98,7 +93,7 @@ public class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static String format(Date date) {
+	public static String format(final Date date) {
 
 		checkDateNotNull(date);
 		return getDateFormat().format(date);
@@ -110,7 +105,7 @@ public class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static String format(long timeMills) {
+	public static String format(final long timeMills) {
 
 		return format(new Date(timeMills));
 	}
@@ -122,7 +117,7 @@ public class DateUtil {
 	 * @param dateFormat
 	 * @return
 	 */
-	public static String format(Date date, String dateFormat) {
+	public static String format(final Date date, final String dateFormat) {
 
 		checkDateNotNull(date);
 		if (StringUtil.isBlank(dateFormat)) {
@@ -139,7 +134,7 @@ public class DateUtil {
 	 * @param dateFormat
 	 * @return
 	 */
-	public static String format(long timeMills, String dateFormat) {
+	public static String format(final long timeMills, final String dateFormat) {
 
 		if (StringUtil.isBlank(dateFormat)) {
 			return format(timeMills);
@@ -154,7 +149,7 @@ public class DateUtil {
 	 * @param dateStr
 	 * @return
 	 */
-	public static Date parse(String dateStr) {
+	public static Date parse(final String dateStr) {
 
 		try {
 			return getDateFormat().parse(dateStr);
@@ -170,7 +165,7 @@ public class DateUtil {
 	 * @param dateFormat
 	 * @return
 	 */
-	public static Date parse(String dateStr, String dateFormat) {
+	public static Date parse(final String dateStr, final String dateFormat) {
 
 		if (StringUtil.isBlank(dateFormat)) {
 			return parse(dateStr);
@@ -191,7 +186,7 @@ public class DateUtil {
 	 * @param year
 	 * @return
 	 */
-	public static Date plusYears(Date date, int year) {
+	public static Date plusYears(final Date date, final int year) {
 
 		return addTime(date, Calendar.YEAR, year);
 	}
@@ -203,7 +198,7 @@ public class DateUtil {
 	 * @param month
 	 * @return
 	 */
-	public static Date plusMonths(Date date, int month) {
+	public static Date plusMonths(final Date date, final int month) {
 
 		return addTime(date, Calendar.MONTH, month);
 	}
@@ -215,7 +210,7 @@ public class DateUtil {
 	 * @param day
 	 * @return
 	 */
-	public static Date plusDays(Date date, int day) {
+	public static Date plusDays(final Date date, final int day) {
 
 		return addTime(date, Calendar.DAY_OF_YEAR, day);
 	}
@@ -227,7 +222,7 @@ public class DateUtil {
 	 * @param hour
 	 * @return
 	 */
-	public static Date plusHours(Date date, int hour) {
+	public static Date plusHours(final Date date, final int hour) {
 
 		return addTime(date, Calendar.HOUR, hour);
 	}
@@ -239,7 +234,7 @@ public class DateUtil {
 	 * @param minute
 	 * @return
 	 */
-	public static Date plusMinutes(Date date, int minute) {
+	public static Date plusMinutes(final Date date, final int minute) {
 
 		return addTime(date, Calendar.MINUTE, minute);
 	}
@@ -251,7 +246,7 @@ public class DateUtil {
 	 * @param second
 	 * @return
 	 */
-	public static Date plusSeconds(Date date, int second) {
+	public static Date plusSeconds(final Date date, final int second) {
 
 		return addTime(date, Calendar.SECOND, second);
 	}
@@ -263,7 +258,7 @@ public class DateUtil {
 	 * @param milliSecond
 	 * @return
 	 */
-	public static Date plusMilliSeconds(Date date, int milliSecond) {
+	public static Date plusMilliSeconds(final Date date, final int milliSecond) {
 
 		return addTime(date, Calendar.MILLISECOND, milliSecond);
 	}
@@ -275,7 +270,7 @@ public class DateUtil {
 	 * @param year
 	 * @return
 	 */
-	public static Date minusYears(Date date, int year) {
+	public static Date minusYears(final Date date, final int year) {
 
 		return minusTime(date, Calendar.YEAR, year);
 	}
@@ -287,7 +282,7 @@ public class DateUtil {
 	 * @param month
 	 * @return
 	 */
-	public static Date minusMonths(Date date, int month) {
+	public static Date minusMonths(final Date date, final int month) {
 
 		return minusTime(date, Calendar.MONTH, month);
 	}
@@ -299,7 +294,7 @@ public class DateUtil {
 	 * @param day
 	 * @return
 	 */
-	public static Date minusDays(Date date, int day) {
+	public static Date minusDays(final Date date, final int day) {
 
 		return minusTime(date, Calendar.DAY_OF_YEAR, day);
 	}
@@ -311,7 +306,7 @@ public class DateUtil {
 	 * @param hour
 	 * @return
 	 */
-	public static Date minusHours(Date date, int hour) {
+	public static Date minusHours(final Date date, final int hour) {
 
 		return minusTime(date, Calendar.HOUR, hour);
 	}
@@ -323,7 +318,7 @@ public class DateUtil {
 	 * @param minute
 	 * @return
 	 */
-	public static Date minusMinutes(Date date, int minute) {
+	public static Date minusMinutes(final Date date, final int minute) {
 
 		return minusTime(date, Calendar.MINUTE, minute);
 	}
@@ -335,7 +330,7 @@ public class DateUtil {
 	 * @param second
 	 * @return
 	 */
-	public static Date minusSeconds(Date date, int second) {
+	public static Date minusSeconds(final Date date, final int second) {
 
 		return minusTime(date, Calendar.SECOND, second);
 	}
@@ -347,7 +342,7 @@ public class DateUtil {
 	 * @param milliSecond
 	 * @return
 	 */
-	public static Date minusMilliSeconds(Date date, int milliSecond) {
+	public static Date minusMilliSeconds(final Date date, final int milliSecond) {
 
 		return minusTime(date, Calendar.MILLISECOND, milliSecond);
 	}
@@ -358,7 +353,7 @@ public class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static Date getStartOfDay(Date date) {
+	public static Date getStartOfDay(final Date date) {
 
 		checkDateNotNull(date);
 
@@ -378,7 +373,7 @@ public class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static Date getStartOfMonth(Date date) {
+	public static Date getStartOfMonth(final Date date) {
 
 		checkDateNotNull(date);
 
@@ -399,7 +394,7 @@ public class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static Date getEndOfDay(Date date) {
+	public static Date getEndOfDay(final Date date) {
 
 		checkDateNotNull(date);
 
@@ -419,7 +414,7 @@ public class DateUtil {
 	 * @param date
 	 * @return
 	 */
-	public static Date getEndOfMonth(Date date) {
+	public static Date getEndOfMonth(final Date date) {
 
 		checkDateNotNull(date);
 
@@ -441,7 +436,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static int compareTo(Date date1, Date date2) {
+	public static int compareTo(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -457,7 +452,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static boolean isSameTime(Date date1, Date date2) {
+	public static boolean isSameTime(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -471,7 +466,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static boolean isSameYear(Date date1, Date date2) {
+	public static boolean isSameYear(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -491,7 +486,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static boolean isSameMonth(Date date1, Date date2) {
+	public static boolean isSameMonth(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -513,7 +508,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static boolean isSameDay(Date date1, Date date2) {
+	public static boolean isSameDay(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -535,7 +530,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static boolean isSameHour(Date date1, Date date2) {
+	public static boolean isSameHour(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -557,7 +552,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static boolean isSameMinute(Date date1, Date date2) {
+	public static boolean isSameMinute(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 
@@ -580,7 +575,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static int yearsBetween(Date date1, Date date2) {
+	public static int yearsBetween(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 		return (int) ((date1.getTime() - date2.getTime()) / YEAR_OF_MILLI_SECONDS);
@@ -593,7 +588,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static int daysBetween(Date date1, Date date2) {
+	public static int daysBetween(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 		return (int) ((date1.getTime() - date2.getTime()) / DAY_OF_MILLI_SECONDS);
@@ -606,7 +601,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static int hoursBetween(Date date1, Date date2) {
+	public static int hoursBetween(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 		return (int) ((date1.getTime() - date2.getTime()) / HOUR_OF_MILLI_SECONDS);
@@ -619,7 +614,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static int minutesBetween(Date date1, Date date2) {
+	public static int minutesBetween(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 		return (int) ((date1.getTime() - date2.getTime()) / MINUTE_OF_MILLI_SECONDS);
@@ -632,7 +627,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static int secondsBetween(Date date1, Date date2) {
+	public static int secondsBetween(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 		return (int) ((date1.getTime() - date2.getTime()) / SECOND_OF_MILLI_SECONDS);
@@ -645,7 +640,7 @@ public class DateUtil {
 	 * @param date2
 	 * @return
 	 */
-	public static long milliSecondsBetween(Date date1, Date date2) {
+	public static long milliSecondsBetween(final Date date1, final Date date2) {
 
 		checkDateNotNull(date1, date2);
 		return date1.getTime() - date2.getTime();

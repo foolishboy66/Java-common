@@ -17,10 +17,10 @@ public class JsonUtilTest {
 		User user = new User();
 		user.setName("王");
 		user.setBirthDay(new Date());
-		List<String> nickNames = new ArrayList<String>();
+		List<String> nickNames = new ArrayList<>();
 		nickNames.add("ccc");
 		user.setNickNames(nickNames);
-		Map<String, School> map = new HashMap<String, School>();
+		Map<String, School> map = new HashMap<>();
 		map.put("no1", new School("a", "123", true));
 		map.put("no2", new School("b", "456", false));
 		user.setSchoolMap(map);

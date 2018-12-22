@@ -1,5 +1,6 @@
 package com.foolishboy.common.utils;
 
+import java.text.MessageFormat;
 import java.util.Iterator;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -378,4 +379,15 @@ public class StringUtil {
 		return right(str, index);
 	}
 
+	/**
+	 * 格式化字符串,将形如https://github.com/{0}/{1}字符串中的占位符替换为指定对象
+	 * 
+	 * @param str
+	 * @param css
+	 * @return
+	 */
+	public static String format(final String str, final Object... css) {
+
+		return MessageFormat.format(str, css);
+	}
 }

@@ -20,7 +20,7 @@ public class JsonUtil {
 	 * @param obj
 	 * @return
 	 */
-	public static String toStr(Object obj) {
+	public static String toStr(final Object obj) {
 
 		return JSON.toJSONString(obj);
 	}
@@ -31,7 +31,7 @@ public class JsonUtil {
 	 * @param json
 	 * @return
 	 */
-	public static <T> T toObj(String json, Class<T> clazz) {
+	public static <T> T toObj(final String json, final Class<T> clazz) {
 
 		return JSON.parseObject(json, clazz);
 	}
@@ -43,7 +43,7 @@ public class JsonUtil {
 	 * @param type
 	 * @return
 	 */
-	public static <T> T toObj(String json, TypeReference<T> type) {
+	public static <T> T toObj(final String json, final TypeReference<T> type) {
 
 		return JSON.parseObject(json, type);
 	}
