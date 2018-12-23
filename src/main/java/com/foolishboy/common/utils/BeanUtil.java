@@ -28,7 +28,7 @@ public class BeanUtil {
 	 * @param source
 	 * @param target
 	 */
-	public static void copyProperties(Object source, Object target) {
+	public static void copyProperties(final Object source, final Object target) {
 
 		copyProperties(source, target, (String[]) null);
 	}
@@ -40,7 +40,7 @@ public class BeanUtil {
 	 * @param target
 	 * @param ignoreProperties
 	 */
-	public static void copyProperties(Object source, Object target, String... ignoreProperties) {
+	public static void copyProperties(final Object source, final Object target, final String... ignoreProperties) {
 
 		BeanUtils.copyProperties(source, target, ignoreProperties);
 	}
@@ -51,7 +51,7 @@ public class BeanUtil {
 	 * @param map
 	 * @param obj
 	 */
-	public static <T> void mapToObj(Map<String, Object> map, T obj) {
+	public static <T> void mapToObj(final Map<String, Object> map, final T obj) {
 
 		if (map == null || obj == null) {
 			return;
@@ -82,7 +82,7 @@ public class BeanUtil {
 	 * @param obj
 	 * @param map
 	 */
-	public static <T> void objToMap(T obj, Map<String, Object> map) {
+	public static <T> void objToMap(final T obj, final Map<String, Object> map) {
 
 		if (obj == null || map == null) {
 			return;
