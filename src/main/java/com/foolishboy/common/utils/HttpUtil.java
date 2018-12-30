@@ -42,10 +42,11 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
+	
 	private HttpUtil() {
 	}
 
-	private static Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 	public final static CloseableHttpClient httpsClient = initHttpsClient();
 	public final static CloseableHttpClient httpClient = HttpClients.createDefault();
 	public static final int MAX_TIMEOUT = 15000;

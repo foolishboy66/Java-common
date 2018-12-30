@@ -27,6 +27,8 @@ public class DateUtilTest {
 		System.out.println(DateUtil.isSameDay(new Date(1544587932000L), new Date(1544591532000L)));
 		System.out.println(DateUtil.isSameDay(new Date(), new Date(1545494412000L)));
 		System.out.println(DateUtil.daysBetween(new Date(), new Date(1545580812000L)));
+		
+		System.out.println(DateUtil.getDayOfWeek(new Date()));
 
 	}
 }

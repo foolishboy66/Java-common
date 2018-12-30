@@ -430,6 +430,29 @@ public class DateUtil {
 	}
 
 	/**
+	 * 获取日期为一周的哪一天
+	 * <p>
+	 * 1-7分别代表周一到周日
+	 * </p>
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static int getDayOfWeek(final Date date) {
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int weekday = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+		int[] weekdays = { 7, 1, 2, 3, 4, 5, 6 };
+		if (weekday < 0) {
+			weekday = 0;
+		}
+
+		return weekdays[weekday];
+	}
+
+	/**
 	 * 比较两个时间的大小,相等时返回0,date1>date2时返回1,date1<date2时返回-1
 	 * 
 	 * @param date1

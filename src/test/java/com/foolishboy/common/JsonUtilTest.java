@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.foolishboy.common.utils.BeanUtil;
 import com.foolishboy.common.utils.JsonUtil;
 import com.foolishboy.domain.School;
 import com.foolishboy.domain.User;
@@ -26,6 +27,14 @@ public class JsonUtilTest {
 		user.setSchoolMap(map);
 
 		System.out.println(JsonUtil.toStr(user));
+		
+		User user3 = new User();
+		BeanUtil.copyProperties(user, user3);
+		user.getSchoolMap().get("no1").setSchoolName("newbe");
+		System.out.println(JsonUtil.toStr(user3));
+		System.out.println(JsonUtil.toStr(user));
+		
+		
 
 		String json = "{\"age\":0,\"birthDay\":1545475380425,\"name\":\"王\",\"nickNames\":[\"ccc\"],\"schoolMap\":{\"no2\":{\"excellent\":false,\"location\":\"456\",\"schoolName\":\"b\"},\"no1\":{\"excellent\":true,\"location\":\"123\",\"schoolName\":\"a\"}},\"sex\":false,\"unkosd\":\"kk\",\"test\":false,\"tt\":[\"asdf\"]}";
 		User user2 = JsonUtil.toObj(json, User.class);
