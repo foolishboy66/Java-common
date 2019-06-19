@@ -15,6 +15,10 @@ public class User {
 	private Boolean hasChildren;
 	private List<String> nickNames;
 	private Map<String, School> schoolMap;
+	
+	private Action action;
+	private User u2;
+
 
 	public String getName() {
 		return name;
@@ -84,6 +88,22 @@ public class User {
 	public String toString() {
 		return "User [name=" + name + ", email=" + email + ", age=" + age + ", sex=" + sex + ", birthDay=" + birthDay
 				+ ", hasChildren=" + hasChildren + ", nickNames=" + nickNames + ", schoolMap=" + schoolMap + "]";
+	}
+
+	public Action getAction() {
+		return action;
+	}
+
+	public void setAction(Action action) {
+		this.action = action;
+	}
+
+	public User getU2() {
+		return u2;
+	}
+
+	public void setU2(User u2) {
+		this.u2 = u2;
 	}
 	
 }

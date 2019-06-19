@@ -9,9 +9,9 @@ import com.alibaba.fastjson.TypeReference;
  * @author wang
  *
  */
-public class JsonUtil {
+public class JsonUtils {
 
-	private JsonUtil() {
+	private JsonUtils() {
 	}
 
 	/**

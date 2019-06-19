@@ -6,6 +6,8 @@ public class School {
 	private String location;
 	private boolean excellent;
 
+	private User user;
+
 	public School() {
 	}
 
@@ -43,5 +45,13 @@ public class School {
 	@Override
 	public String toString() {
 		return "School [schoolName=" + schoolName + ", location=" + location + ", excellent=" + excellent + "]";
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

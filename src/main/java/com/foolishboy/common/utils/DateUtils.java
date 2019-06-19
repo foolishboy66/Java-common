@@ -12,7 +12,7 @@ import java.util.Date;
  * @author wang
  *
  */
-public class DateUtil {
+public class DateUtils {
 
 	private static final int INIT_VALUE = 0;
 	private static final int MIN_DAY_OF_MONTH = 1;
@@ -51,7 +51,7 @@ public class DateUtil {
 
 	private static ThreadLocal<DateFormat> threadLocal = new ThreadLocal<DateFormat>();
 
-	private DateUtil() {
+	private DateUtils() {
 	}
 
 	private static DateFormat getDateFormat() {
@@ -120,7 +120,7 @@ public class DateUtil {
 	public static String format(final Date date, final String dateFormat) {
 
 		checkDateNotNull(date);
-		if (StringUtil.isBlank(dateFormat)) {
+		if (StringUtils.isBlank(dateFormat)) {
 			return format(date);
 		}
 		DateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
@@ -136,7 +136,7 @@ public class DateUtil {
 	 */
 	public static String format(final long timeMills, final String dateFormat) {
 
-		if (StringUtil.isBlank(dateFormat)) {
+		if (StringUtils.isBlank(dateFormat)) {
 			return format(timeMills);
 		}
 		DateFormat simpleDateFormat = new SimpleDateFormat(dateFormat);
@@ -167,7 +167,7 @@ public class DateUtil {
 	 */
 	public static Date parse(final String dateStr, final String dateFormat) {
 
-		if (StringUtil.isBlank(dateFormat)) {
+		if (StringUtils.isBlank(dateFormat)) {
 			return parse(dateStr);
 		}
 

@@ -11,12 +11,12 @@ import org.apache.commons.lang3.ArrayUtils;
  * @author wang
  *
  */
-public class StringUtil {
+public class StringUtils {
 
 	private static final String EMPTY_STR = "";
 	private static final int NOT_FOUND_INDEX = -1;
 
-	private StringUtil() {
+	private StringUtils() {
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class StringUtil {
 			}
 			Object next = iterator.next();
 			if (next != null) {
-				sb.append(iterator.next());
+				sb.append(next);
 			}
 		}
 
@@ -254,7 +254,7 @@ public class StringUtil {
 			}
 			CharSequence next = iterator.next();
 			if (next != null) {
-				sb.append(iterator.next());
+				sb.append(next);
 			}
 		}
 

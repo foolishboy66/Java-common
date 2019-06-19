@@ -40,11 +40,11 @@ import org.slf4j.LoggerFactory;
  * @author wang
  *
  */
-public class HttpUtil {
+public class HttpUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 	
-	private HttpUtil() {
+	private HttpUtils() {
 	}
 
 	public final static CloseableHttpClient httpsClient = initHttpsClient();
@@ -131,7 +131,7 @@ public class HttpUtil {
 	 * @return 响应结果
 	 */
 	public static <T> T get(String url, Class<T> clazz) {
-		return JsonUtil.toObj(get(url), clazz);
+		return JsonUtils.toObj(get(url), clazz);
 	}
 
 	/**
@@ -146,7 +146,7 @@ public class HttpUtil {
 	 * @return 响应结果
 	 */
 	public static <T> T gets(String url, Class<T> clazz) {
-		return JsonUtil.toObj(gets(url), clazz);
+		return JsonUtils.toObj(gets(url), clazz);
 	}
 
 	/**
@@ -271,7 +271,7 @@ public class HttpUtil {
 	 * @return 响应结果
 	 */
 	public static <T> T post(String url, Class<T> clazz, KeyValue... args) {
-		return JsonUtil.toObj(post(url, args), clazz);
+		return JsonUtils.toObj(post(url, args), clazz);
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class HttpUtil {
 	 * @return 响应结果
 	 */
 	public static <T> T posts(String url, Class<T> clazz, KeyValue... args) {
-		return JsonUtil.toObj(posts(url, args), clazz);
+		return JsonUtils.toObj(posts(url, args), clazz);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class HttpUtil {
 	 * @return 响应结果
 	 */
 	public static <T> T post(String url, Map<String, String> args, Class<T> clazz) {
-		return JsonUtil.toObj(post(url, args), clazz);
+		return JsonUtils.toObj(post(url, args), clazz);
 	}
 
 	/**
@@ -322,7 +322,7 @@ public class HttpUtil {
 	 * @return 响应结果
 	 */
 	public static <T> T posts(String url, Map<String, String> args, Class<T> clazz) {
-		return JsonUtil.toObj(posts(url, args), clazz);
+		return JsonUtils.toObj(posts(url, args), clazz);
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class HttpUtil {
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setEntity(new StringEntity(content, CHARSET_UTF8));
 		logger.debug("https content: {}", content);
-		return JsonUtil.toObj(execute(httpsClient, httpPost), clazz);
+		return JsonUtils.toObj(execute(httpsClient, httpPost), clazz);
 	}
 
 	/**
@@ -390,7 +390,7 @@ public class HttpUtil {
 		HttpPost httpPost = new HttpPost(url);
 		httpPost.setEntity(new StringEntity(encoding(content), CHARSET_UTF8));
 		logger.debug("https content: {}", content);
-		return JsonUtil.toObj(execute(httpsClient, httpPost), clazz);
+		return JsonUtils.toObj(execute(httpsClient, httpPost), clazz);
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static <T> T post(String url, HttpEntity httpEntity, Class<T> clazz) {
-		return JsonUtil.toObj(post(url, httpEntity), clazz);
+		return JsonUtils.toObj(post(url, httpEntity), clazz);
 	}
 
 	/**
@@ -452,7 +452,7 @@ public class HttpUtil {
 	 * @return
 	 */
 	public static <T> T posts(String url, HttpEntity httpEntity, Class<T> clazz) {
-		return JsonUtil.toObj(posts(url, httpEntity), clazz);
+		return JsonUtils.toObj(posts(url, httpEntity), clazz);
 	}
 
 	/**
@@ -561,7 +561,7 @@ public class HttpUtil {
 	}
 
 	private static UrlEncodedFormEntity adapter(Map<String, String> args) {
-		List<NameValuePair> params = new LinkedList<>();
+		final List<NameValuePair> params = new LinkedList<>();
 		args.forEach((key, val) -> params.add(new BasicNameValuePair(key, args.get(key))));
 		try {
 			return new UrlEncodedFormEntity(params, CHARSET_UTF8);

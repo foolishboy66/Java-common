@@ -15,9 +15,9 @@ import java.util.Set;
  * @author wang
  *
  */
-public class CollectionUtil {
+public class CollectionUtils {
 
-	private CollectionUtil() {
+	private CollectionUtils() {
 	}
 
 	private static <T> Map<?, Integer> getFrequencyMap(Collection<? extends T> colle) {

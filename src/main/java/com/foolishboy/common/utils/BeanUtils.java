@@ -8,17 +8,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
-
 /**
  * JavaBean操作工具类
  * 
  * @author wang
  *
  */
-public class BeanUtil {
+public class BeanUtils {
 
-	private BeanUtil() {
+	private BeanUtils() {
 
 	}
 
@@ -42,7 +40,7 @@ public class BeanUtil {
 	 */
 	public static void copyProperties(final Object source, final Object target, final String... ignoreProperties) {
 
-		BeanUtils.copyProperties(source, target, ignoreProperties);
+		org.springframework.beans.BeanUtils.copyProperties(source, target, ignoreProperties);
 	}
 
 	/**

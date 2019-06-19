@@ -1,1 +1,13 @@
 /target/
+
+*.imi
+*.class
+*.jar
+*.log
+/logs/*
+/target/*
+.gitignore
+.classpath
+.settings*
+.project
+/.idea/*
