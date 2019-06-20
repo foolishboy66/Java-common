@@ -139,8 +139,7 @@ public class CollectionUtils {
      * @param <T> 元素类型
      * @return true:全部非空，false:有空集合
      */
-    @SuppressWarnings("unchecked")
-    public static <T> boolean isNoneEmpty(final Collection<T>... colles) {
+    public static <T> boolean isNoneEmpty(final Collection<?>... colles) {
 
         return !isAnyEmpty(colles);
     }
