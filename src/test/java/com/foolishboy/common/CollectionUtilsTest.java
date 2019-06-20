@@ -7,7 +7,8 @@ import com.foolishboy.common.utils.CollectionUtils;
 
 public class CollectionUtilsTest {
 
-	public static void main(String[] args) {
+	@SuppressWarnings("unchecked")
+    public static void main(String[] args) {
 
 		List<String> a1 = new ArrayList<>();
 		for (int i = 0; i < 10; i++) {
