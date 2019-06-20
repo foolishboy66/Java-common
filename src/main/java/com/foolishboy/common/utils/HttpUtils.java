@@ -1,617 +1,588 @@
 package com.foolishboy.common.utils;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.cert.CertificateException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.commons.collections.KeyValue;
-import org.apache.commons.io.IOUtils;
+import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpResponseException;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ssl.DefaultHostnameVerifier;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.TypeReference;
+
 /**
  * http请求工具类
- * 
- * @author wang
  *
+ * @author wang
  */
 public class HttpUtils {
 
-	private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
-	
-	private HttpUtils() {
-	}
+    private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
-	public final static CloseableHttpClient httpsClient = initHttpsClient();
-	public final static CloseableHttpClient httpClient = HttpClients.createDefault();
-	public static final int MAX_TIMEOUT = 15000;
-	public static final String CHARSET_UTF8 = "UTF-8";
-	public static final String CHARSET_GB2312 = "GB2312";
-	public static final String CHARSET_GBK = "GBK";
+    private HttpUtils() {}
 
-	/**
-	 * 发送HTTP GET请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 请求后返回的数据
-	 */
-	public static String get(String url) {
-		return execute(httpClient, new HttpGet(url));
-	}
+    private final static CloseableHttpClient HTTP_CLIENT;
 
-	public static String get(String url, String encoding) {
-		return execute(httpClient, new HttpGet(url), encoding);
-	}
+    /**
+     * 非活动保持时间,单位ms
+     */
+    private static final int VALIDATE_AFTER_INACTIVITY_IN_MILLS = 30 * 1000;
+    /**
+     * 最大连接数
+     */
+    private static final int MAX_TOTAL_CONNECTION = 1000;
+    /**
+     * 同一host最大连接数
+     */
+    private static final int MAX_PER_ROUTE = 200;
+    /**
+     * 建立连接超时时间,单位ms
+     */
+    private static final int CONNECTION_TIMEOUT_IN_MILLS = 60 * 1000;
+    /**
+     * socket超时时间,单位ms
+     */
+    private static final int SOCKET_TIMEOUT_IN_MILLS = 30 * 1000;
+    /**
+     * 从连接池中请求连接超时时间,单位ms
+     */
+    private static final int CONNECTION_REQUEST_TIMEOUT_IN_MILLS = 30 * 1000;
+    /**
+     * 连接最大空闲时间,单位s
+     */
+    private static final int MAX_IDLE_TIME_IN_SECONDS = 5 * 60;
 
-	/**
-	 * 发送HTTPS GET请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 请求后返回的数据
-	 */
-	public static String gets(String url) {
-		return execute(httpsClient, new HttpGet(url));
-	}
+    /**
+     * http成功状态码
+     */
+    private static final int HTTP_OK_STATUS = 200;
 
-	/**
-	 * 发送HTTP GET请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 请求后返回的数据
-	 */
-	public static String get(String url, Map<String, String> args) {
-		String serialize = serialize(args);
-		String urlArgs = appendToUrl(url, serialize);
-		return execute(httpClient, new HttpGet(urlArgs));
-	}
+    static {
 
-	/**
-	 * 发送HTTPS GET请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 请求后返回的数据
-	 */
-	public static String gets(String url, Map<String, String> args) {
-		String serialize = serialize(args);
-		String urlArgs = appendToUrl(url, serialize);
-		return execute(httpsClient, new HttpGet(urlArgs));
-	}
+        SSLContext sslContext;
+        try {
+            sslContext = SSLContext.getInstance("TLSv1.2");
+            sslContext.init(null, new TrustManager[] {new MyX509TrustManager()}, new SecureRandom());
+        } catch (KeyManagementException | NoSuchAlgorithmException e1) {
+            throw new RuntimeException("ssl init error!");
+        }
 
-	/**
-	 * 发送HTTP GET请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 请求后返回的数据
-	 */
-	public static String get(String url, KeyValue... args) {
-		String serialize = serialize(args);
-		String urlArgs = appendToUrl(url, serialize);
-		return execute(httpClient, new HttpGet(urlArgs));
-	}
+        ConnectionSocketFactory sslConnectionSocketFactory =
+            new SSLConnectionSocketFactory(sslContext, (hostname, session) -> true);
+        Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+            .register("http", PlainConnectionSocketFactory.getSocketFactory())
+            .register("https", sslConnectionSocketFactory).build();
 
-	/**
-	 * 发送HTTP GET请求，必须响应JSON数据，并且将JSON数据转换成对于的类型
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param clazz
-	 *            响应类型的Class
-	 * @param <T>
-	 *            响应结果
-	 * @return 响应结果
-	 */
-	public static <T> T get(String url, Class<T> clazz) {
-		return JsonUtils.toObj(get(url), clazz);
-	}
+        PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        connMgr.setValidateAfterInactivity(VALIDATE_AFTER_INACTIVITY_IN_MILLS);
+        connMgr.setMaxTotal(MAX_TOTAL_CONNECTION);
+        connMgr.setDefaultMaxPerRoute(MAX_PER_ROUTE);
+        connMgr.setDefaultSocketConfig(SocketConfig.custom().setTcpNoDelay(true).build());
 
-	/**
-	 * 发送HTTPS GET请求，必须响应JSON数据，并且将JSON数据转换成对于的类型
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param clazz
-	 *            响应类型的Class
-	 * @param <T>
-	 *            响应结果
-	 * @return 响应结果
-	 */
-	public static <T> T gets(String url, Class<T> clazz) {
-		return JsonUtils.toObj(gets(url), clazz);
-	}
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(CONNECTION_TIMEOUT_IN_MILLS)
+            .setSocketTimeout(SOCKET_TIMEOUT_IN_MILLS).setConnectionRequestTimeout(CONNECTION_REQUEST_TIMEOUT_IN_MILLS)
+            .build();
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 响应结果
-	 */
-	public static String post(String url) {
-		return execute(httpClient, new HttpPost(url));
-	}
+        HTTP_CLIENT = HttpClients.custom().setConnectionManager(connMgr).setDefaultRequestConfig(requestConfig)
+            .evictIdleConnections(MAX_IDLE_TIME_IN_SECONDS, TimeUnit.SECONDS).build();
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @return 响应结果
-	 */
-	public static String posts(String url) {
-		return execute(httpsClient, new HttpPost(url));
-	}
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                HTTP_CLIENT.close();
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }));
+    }
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @return
-	 */
-	public static String post(String url, Map<String, String> args) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(adapter(args));
-		return execute(httpClient, httpPost);
-	}
+    private static ResponseHandler<String> responseHandler = response -> {
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @return
-	 */
-	public static String posts(String url, Map<String, String> args) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(adapter(args));
-		return execute(httpsClient, httpPost);
-	}
+        StatusLine statusLine = response.getStatusLine();
+        if (statusLine.getStatusCode() != HTTP_OK_STATUS) {
+            throw new HttpResponseException(statusLine.getStatusCode(), statusLine.getReasonPhrase());
+        }
+        HttpEntity entity = response.getEntity();
+        if (entity == null) {
+            throw new ClientProtocolException("Response contains no content.");
+        }
+        return EntityUtils.toString(entity, Consts.UTF_8);
+    };
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @return
-	 */
-	public static String post(String url, KeyValue... args) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(adapter(args));
-		return execute(httpClient, httpPost);
-	}
+    /**
+     * 发送get请求
+     *
+     * @param url 请求地址
+     * @param describe 描述信息
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T get(String url, String describe, TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param encoding
-	 *            字符编码
-	 * @param args
-	 *            POST请求传递的参数
-	 * @return
-	 */
-	public static String post(String url, String encoding, KeyValue... args) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(adapter(encoding, args));
-		return execute(httpClient, httpPost, encoding);
-	}
+        return get(url, null, null, describe, true, true, responseType);
+    }
 
-	public static String postHeader(String url, String encoding, KeyValue[] headers, KeyValue... args) {
-		HttpPost httpPost = new HttpPost(url);
-		for (KeyValue keyValue : headers) {
-			httpPost.setHeader(keyValue.getKey().toString(), keyValue.getValue().toString());
-		}
-		httpPost.setEntity(adapter(encoding, args));
-		return execute(httpClient, httpPost, encoding);
-	}
+    /**
+     * 发送get请求,控制是否打印请求参数以及响应
+     *
+     * @param url 请求地址
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T get(String url, String describe, boolean logRequest, boolean logResponse,
+        TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @return
-	 */
-	public static String posts(String url, KeyValue... args) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(adapter(args));
-		return execute(httpsClient, httpPost);
-	}
+        return get(url, null, null, describe, logRequest, logResponse, responseType);
+    }
 
-	/**
-	 * 发送HTTP POST请求，响应类型必须是JSON
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @param clazz
-	 *            响应类型的Class
-	 * @param <T>
-	 *            响应结果
-	 * @return 响应结果
-	 */
-	public static <T> T post(String url, Class<T> clazz, KeyValue... args) {
-		return JsonUtils.toObj(post(url, args), clazz);
-	}
+    /**
+     * 发送带有请求头的get请求
+     *
+     * @param url 请求地址
+     * @param header 请求头map
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T get(String url, Map<String, String> header, String describe, boolean logRequest,
+        boolean logResponse, TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求，响应类型必须是JSON
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @param clazz
-	 *            响应类型的Class
-	 * @param <T>
-	 *            响应结果
-	 * @return 响应结果
-	 */
-	public static <T> T posts(String url, Class<T> clazz, KeyValue... args) {
-		return JsonUtils.toObj(posts(url, args), clazz);
-	}
+        return get(url, null, header, describe, logRequest, logResponse, responseType);
+    }
 
-	/**
-	 * 发送HTTP POST请求，响应类型必须是JSON
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @param clazz
-	 *            响应类型的Class
-	 * @param <T>
-	 *            响应结果
-	 * @return 响应结果
-	 */
-	public static <T> T post(String url, Map<String, String> args, Class<T> clazz) {
-		return JsonUtils.toObj(post(url, args), clazz);
-	}
+    /**
+     * 发送带有请求头的get请求,会将参数拼接到url上
+     *
+     * @param url 请求地址
+     * @param args 请求参数map
+     * @param header 请求头map
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T get(String url, Map<String, String> args, Map<String, String> header, String describe,
+        boolean logRequest, boolean logResponse, TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求，响应类型必须是JSON
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param args
-	 *            POST请求传递的参数
-	 * @param clazz
-	 *            响应类型的Class
-	 * @param <T>
-	 *            响应结果
-	 * @return 响应结果
-	 */
-	public static <T> T posts(String url, Map<String, String> args, Class<T> clazz) {
-		return JsonUtils.toObj(posts(url, args), clazz);
-	}
+        String response = get0(url, args, header, describe, logRequest, logResponse);
+        if (StringUtils.isBlank(response)) {
+            return null;
+        }
+        return JsonUtils.toObj(response, responseType);
+    }
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param content
-	 *            请求内容，自动编码为UTF-8
-	 * @return
-	 */
-	public static String post(String url, String content) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new StringEntity(content, CHARSET_UTF8));
-		logger.debug("http content: {}", content);
-		return execute(httpClient, httpPost);
-	}
+    /**
+     * 发送post请求
+     *
+     * @param url 请求地址
+     * @param entity 请求参数实体类
+     * @param describe 描述信息
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T post(String url, Object entity, String describe, TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param content
-	 *            请求内容，自动编码为UTF-8
-	 * @return
-	 */
-	public static String posts(String url, String content) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new StringEntity(content, CHARSET_UTF8));
-		logger.debug("https content: {}", content);
-		return execute(httpsClient, httpPost);
-	}
+        return post(url, entity, null, describe, true, true, responseType);
+    }
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param content
-	 *            请求内容，自动编码为UTF-8
-	 * @param clazz
-	 *            响应结果类型
-	 * @return
-	 */
-	public static <T> T posts(String url, String content, Class<T> clazz) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new StringEntity(content, CHARSET_UTF8));
-		logger.debug("https content: {}", content);
-		return JsonUtils.toObj(execute(httpsClient, httpPost), clazz);
-	}
+    /**
+     * 发送post请求,控制是否打印请求体以及响应
+     *
+     * @param url 请求地址
+     * @param entity 请求参数实体类
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T post(String url, Object entity, String describe, boolean logRequest, boolean logResponse,
+        TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param content
-	 *            请求内容，自动编码为UTF-8
-	 * @param clazz
-	 *            响应结果类型
-	 * @return
-	 */
-	public static <T> T postsUTF8(String url, String content, Class<T> clazz) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(new StringEntity(encoding(content), CHARSET_UTF8));
-		logger.debug("https content: {}", content);
-		return JsonUtils.toObj(execute(httpsClient, httpPost), clazz);
-	}
+        return post(url, entity, null, describe, logRequest, logResponse, responseType);
+    }
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param httpEntity
-	 *            请求内容
-	 * @return
-	 */
-	public static String post(String url, HttpEntity httpEntity) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(httpEntity);
-		return execute(httpClient, httpPost);
-	}
+    /**
+     * 发送带有请求头的post请求
+     *
+     * @param url 请求地址
+     * @param entity 请求参数实体类
+     * @param header 请求头map
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T post(String url, Object entity, Map<String, String> header, String describe, boolean logRequest,
+        boolean logResponse, TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param httpEntity
-	 *            请求内容
-	 * @return
-	 */
-	public static String posts(String url, HttpEntity httpEntity) {
-		HttpPost httpPost = new HttpPost(url);
-		httpPost.setEntity(httpEntity);
-		return execute(httpsClient, httpPost);
-	}
+        String response = post0(url, JsonUtils.toStr(entity), header, describe, logRequest, logResponse);
+        if (StringUtils.isBlank(response)) {
+            return null;
+        }
+        return JsonUtils.toObj(response, responseType);
+    }
 
-	/**
-	 * 发送HTTP POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param httpEntity
-	 *            请求内容
-	 * @param clazz
-	 *            响应类型的CLASS
-	 * @param <T>
-	 * @return
-	 */
-	public static <T> T post(String url, HttpEntity httpEntity, Class<T> clazz) {
-		return JsonUtils.toObj(post(url, httpEntity), clazz);
-	}
+    /**
+     * 发送delete请求
+     *
+     * @param url 请求地址
+     * @param describe 描述信息
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T delete(String url, String describe, TypeReference<T> responseType) {
 
-	/**
-	 * 发送HTTPS POST请求
-	 *
-	 * @param url
-	 *            请求地址
-	 * @param httpEntity
-	 *            请求内容
-	 * @param clazz
-	 *            响应类型的CLASS
-	 * @param <T>
-	 * @return
-	 */
-	public static <T> T posts(String url, HttpEntity httpEntity, Class<T> clazz) {
-		return JsonUtils.toObj(posts(url, httpEntity), clazz);
-	}
+        return delete(url, null, null, describe, true, true, responseType);
+    }
 
-	/**
-	 * web应用销毁时，关闭httpClient,释放资源
-	 */
-	public static void close() {
-		try {
-			httpClient.close();
-			logger.debug("http utils close...");
-		} catch (IOException e) {
-			logger.error("http utils close error", e);
-		}
-		try {
-			httpsClient.close();
-			logger.debug("https utils close...");
-		} catch (IOException e) {
-			logger.error("https utils close error", e);
-		}
-	}
+    /**
+     * 发送delete请求,控制是否打印请求参数以及响应
+     *
+     * @param url 请求地址
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T delete(String url, String describe, boolean logRequest, boolean logResponse,
+        TypeReference<T> responseType) {
 
-	static String execute(CloseableHttpClient client, HttpUriRequest request, String encoding) {
-		InputStream inputStream = null;
-		try (CloseableHttpResponse httpResponse = client.execute(request)) {
-			HttpEntity entity = httpResponse.getEntity();
-			int statusCode = httpResponse.getStatusLine().getStatusCode();
-			if (statusCode == 200) {
-				inputStream = entity.getContent();
-				return IOUtils.toString(inputStream, encoding);
-			} else {
-				throw new RuntimeException("http request statusCode = " + statusCode);
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			request.abort();
-			IOUtils.closeQuietly(inputStream);
-		}
-	}
+        return delete(url, null, null, describe, logRequest, logResponse, responseType);
+    }
 
-	static String execute(CloseableHttpClient client, HttpUriRequest request) {
-		return execute(client, request, CHARSET_UTF8);
-	}
+    /**
+     * 发送带有请求头的delete请求
+     *
+     * @param url 请求地址
+     * @param header 请求头map
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T delete(String url, Map<String, String> header, String describe, boolean logRequest,
+        boolean logResponse, TypeReference<T> responseType) {
 
-	public static String encoding(String source) {
-		return encoding(source, CHARSET_UTF8);
-	}
+        return delete(url, null, header, describe, logRequest, logResponse, responseType);
+    }
 
-	public static String encoding(String source, String encoding) {
-		try {
-			return new String(source.getBytes(encoding));
-		} catch (UnsupportedEncodingException e) {
-			logger.error("unsupported encoding", e);
-			return source;
-		}
-	}
+    /**
+     * 发送带有请求头的delete请求,会将参数拼接到url上
+     *
+     * @param url 请求地址
+     * @param args 请求参数map
+     * @param header 请求头map
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T delete(String url, Map<String, String> args, Map<String, String> header, String describe,
+        boolean logRequest, boolean logResponse, TypeReference<T> responseType) {
 
-	private static String serialize(KeyValue... args) {
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
-		for (KeyValue kv : args) {
-			if (i++ != 0)
-				sb.append("&");
-			sb.append(kv.getKey());
-			sb.append("=");
-			sb.append(kv.getValue());
-		}
-		return sb.toString();
-	}
+        String response = delete0(url, args, header, describe, logRequest, logResponse);
+        if (StringUtils.isBlank(response)) {
+            return null;
+        }
+        return JsonUtils.toObj(response, responseType);
+    }
 
-	private static String serialize(Map<String, String> args) {
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
-		for (String key : args.keySet()) {
-			if (i++ != 0)
-				sb.append("&");
-			sb.append(key);
-			sb.append("=");
-			sb.append(args.get(key));
-		}
-		return sb.toString();
-	}
+    /**
+     * 发送put请求
+     *
+     * @param url 请求地址
+     * @param entity 请求参数实体类
+     * @param describe 描述信息
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T put(String url, Object entity, String describe, TypeReference<T> responseType) {
 
-	private static String appendToUrl(String url, String serialize) {
-		int i = url.indexOf('?');
-		if (i > 0) {
-			return url + "&" + serialize;
-		} else {
-			return url + "?" + serialize;
-		}
-	}
+        return put(url, entity, null, describe, true, true, responseType);
+    }
 
-	private static UrlEncodedFormEntity adapter(String encoding, KeyValue... args) {
-		List<NameValuePair> params = new LinkedList<>();
-		for (KeyValue kv : args) {
-			params.add(new BasicNameValuePair(kv.getKey().toString(), (String) kv.getValue()));
-		}
-		try {
-			return new UrlEncodedFormEntity(params, encoding);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("编码格式不支持," + encoding, e);
-		}
-	}
+    /**
+     * 发送put请求,控制是否打印请求体以及响应
+     *
+     * @param url 请求地址
+     * @param entity 请求参数实体类
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T put(String url, Object entity, String describe, boolean logRequest, boolean logResponse,
+        TypeReference<T> responseType) {
 
-	private static UrlEncodedFormEntity adapter(KeyValue... args) {
-		return adapter(CHARSET_UTF8, args);
-	}
+        return put(url, entity, null, describe, logRequest, logResponse, responseType);
+    }
 
-	private static UrlEncodedFormEntity adapter(Map<String, String> args) {
-		final List<NameValuePair> params = new LinkedList<>();
-		args.forEach((key, val) -> params.add(new BasicNameValuePair(key, args.get(key))));
-		try {
-			return new UrlEncodedFormEntity(params, CHARSET_UTF8);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("编码格式不支持," + CHARSET_UTF8, e);
-		}
-	}
+    /**
+     * 发送带有请求头的put请求
+     *
+     * @param url 请求地址
+     * @param entity 请求参数实体类
+     * @param header 请求头map
+     * @param describe 描述信息
+     * @param logRequest 是否打印请求
+     * @param logResponse 是否打印响应
+     * @param responseType 返回类型
+     * @param <T> 返回对象类型
+     * @return T 响应反序列化的实体对象
+     */
+    public static <T> T put(String url, Object entity, Map<String, String> header, String describe, boolean logRequest,
+        boolean logResponse, TypeReference<T> responseType) {
 
-	private static CloseableHttpClient initHttpsClient() {
-		PoolingHttpClientConnectionManager connMgr = new PoolingHttpClientConnectionManager();
-		connMgr.setValidateAfterInactivity(30 * 1000);
-		connMgr.setMaxTotal(10);
-		connMgr.setDefaultMaxPerRoute(connMgr.getMaxTotal());
-		RequestConfig.Builder configBuilder = RequestConfig.custom();
-		configBuilder.setConnectTimeout(MAX_TIMEOUT);
-		configBuilder.setSocketTimeout(MAX_TIMEOUT);
-		configBuilder.setConnectionRequestTimeout(MAX_TIMEOUT);
-		RequestConfig requestConfig = configBuilder.build();
-		return HttpClients.custom().setSSLSocketFactory(createSSLConnSocketFactory()).setConnectionManager(connMgr)
-				.setDefaultRequestConfig(requestConfig).build();
-	}
+        String response = put0(url, JsonUtils.toStr(entity), header, describe, logRequest, logResponse);
+        if (StringUtils.isBlank(response)) {
+            return null;
+        }
+        return JsonUtils.toObj(response, responseType);
+    }
 
-	private static SSLConnectionSocketFactory createSSLConnSocketFactory() {
-		SSLConnectionSocketFactory factory = null;
-		try {
-			TrustManager[] tm = { new MyX509TrustManager() };
-			SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-			sslContext.init(null, tm, new java.security.SecureRandom());
-			factory = new SSLConnectionSocketFactory(sslContext, new DefaultHostnameVerifier());
-		} catch (GeneralSecurityException e) {
-			e.printStackTrace();
-		}
-		return factory;
-	}
+    private static String get0(String url, Map<String, String> args, Map<String, String> header, String describe,
+        boolean logRequest, boolean logResponse) {
 
-	static class MyX509TrustManager implements X509TrustManager {
-		@Override
-		public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        String params = serialize(args);
+        url = appendToUrl(url, params);
+        String messageId = "default-messageId";
+        if (logRequest) {
+            messageId = UuidUtils.getUuid();
+            logger.info("-> messageId:{} {} url:{} header:{}", messageId, describe, url, header);
+        }
+        String response = get0(url, header);
+        if (logResponse) {
+            logger.info("-> messageId:{} {} response:{}", messageId, describe, response);
+        }
+        return response;
+    }
 
-		}
+    private static String get0(String url, Map<String, String> header) {
 
-		@Override
-		public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        HttpGet httpGet = new HttpGet(url);
+        buildWithHeader(httpGet, header);
+        try {
+            return execute(httpGet);
+        } catch (IOException e) {
+            throw new RuntimeException(HttpErrorConstants.HTTP_GET_ERROR_MESSAGE, e);
+        }
+    }
 
-		}
+    private static String post0(String url, String entity, Map<String, String> header, String describe,
+        boolean logRequest, boolean logResponse) {
 
-		@Override
-		public X509Certificate[] getAcceptedIssuers() {
-			return null;
-		}
-	}
+        String messageId = "default-messageId";
+        if (logRequest) {
+            messageId = UuidUtils.getUuid();
+            logger.info("-> messageId:{} {} url:{} header:{} body:{}", messageId, describe, url, header, entity);
+        }
+        String response = post0(url, entity, header);
+        if (logResponse) {
+            logger.info("-> messageId:{} {} response:{}", messageId, describe, response);
+        }
+        return response;
+    }
+
+    private static String post0(String url, String entity, Map<String, String> header) {
+
+        HttpPost httpPost = new HttpPost(url);
+        buildWithHeader(httpPost, header);
+        buildWithEntity(httpPost, entity, ContentType.APPLICATION_JSON.getMimeType());
+        try {
+            return execute(httpPost);
+        } catch (IOException e) {
+            throw new RuntimeException(HttpErrorConstants.HTTP_POST_ERROR_MESSAGE, e);
+        }
+    }
+
+    private static String put0(String url, String entity, Map<String, String> header, String describe,
+        boolean logRequest, boolean logResponse) {
+
+        String messageId = "default-messageId";
+        if (logRequest) {
+            messageId = UuidUtils.getUuid();
+            logger.info("-> messageId:{} {} url:{} header:{} body:{}", messageId, describe, url, header, entity);
+        }
+        String response = put0(url, entity, header);
+        if (logResponse) {
+            logger.info("-> messageId:{} {} response:{}", messageId, describe, response);
+        }
+        return response;
+    }
+
+    private static String put0(String url, String entity, Map<String, String> header) {
+
+        HttpPut httpPut = new HttpPut(url);
+        buildWithHeader(httpPut, header);
+        buildWithEntity(httpPut, entity, ContentType.APPLICATION_JSON.getMimeType());
+        try {
+            return execute(httpPut);
+        } catch (IOException e) {
+            throw new RuntimeException(HttpErrorConstants.HTTP_PUT_ERROR_MESSAGE, e);
+        }
+    }
+
+    private static String delete0(String url, Map<String, String> args, Map<String, String> header, String describe,
+        boolean logRequest, boolean logResponse) {
+
+        String params = serialize(args);
+        url = appendToUrl(url, params);
+        String messageId = "default-messageId";
+        if (logRequest) {
+            messageId = UuidUtils.getUuid();
+            logger.info("-> messageId:{} {} url:{} header:{}", messageId, describe, url, header);
+        }
+        String response = delete0(url, header);
+        if (logResponse) {
+            logger.info("-> messageId:{} {} response:{}", messageId, describe, response);
+        }
+        return response;
+    }
+
+    private static String delete0(String url, Map<String, String> header) {
+
+        HttpDelete httpDelete = new HttpDelete(url);
+        buildWithHeader(httpDelete, header);
+        try {
+            return execute(httpDelete);
+        } catch (IOException e) {
+            throw new RuntimeException(HttpErrorConstants.HTTP_DELETE_ERROR_MESSAGE, e);
+        }
+    }
+
+    private static void buildWithEntity(HttpEntityEnclosingRequestBase request, String entity, String mimeType) {
+
+        request.setEntity(new StringEntity(entity, ContentType.create(mimeType, Consts.UTF_8)));
+    }
+
+    private static void buildWithHeader(HttpRequestBase request, Map<String, String> header) {
+
+        if (header != null) {
+            header.forEach(request::addHeader);
+        }
+    }
+
+    private static String execute(HttpUriRequest request) throws IOException {
+
+        return HTTP_CLIENT.execute(request, responseHandler);
+    }
+
+    private static String serialize(Map<String, String> args) {
+        if (args == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        for (String key : args.keySet()) {
+            if (i++ != 0) {
+                sb.append("&");
+            }
+            sb.append(key);
+            sb.append("=");
+            sb.append(args.get(key));
+        }
+        return sb.toString();
+    }
+
+    private static String appendToUrl(String url, String serialize) {
+
+        if (serialize == null) {
+            return url;
+        }
+        int i = url.indexOf('?');
+        if (i > 0) {
+            return url + "&" + serialize;
+        } else {
+            return url + "?" + serialize;
+        }
+    }
+
+    private static class MyX509TrustManager implements X509TrustManager {
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
+
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
+
+        }
+
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+
+            return new X509Certificate[0];
+        }
+    }
+
+    /**
+     * http异常描述
+     */
+    private interface HttpErrorConstants {
+
+        String HTTP_GET_ERROR_MESSAGE = "Http GET method invoke error!";
+        String HTTP_POST_ERROR_MESSAGE = "Http POST method invoke error!";
+        String HTTP_PUT_ERROR_MESSAGE = "Http PUT method invoke error!";
+        String HTTP_DELETE_ERROR_MESSAGE = "Http DELETE method invoke error!";
+    }
 
 }

@@ -10,19 +10,18 @@ import java.util.UUID;
  */
 public class UuidUtils {
 
-	private UuidUtils() {
+    private UuidUtils() {
 
-	}
+    }
 
-	
-	/**
-	 * 获取uuid
-	 * 
-	 * @return
-	 */
-	public static String getUuid() {
+    /**
+     * 获取uuid
+     * 
+     * @return String 生成的32为的uuid字符串
+     */
+    public static String getUuid() {
 
-		return UUID.randomUUID().toString().replaceAll("-", "");
-	}
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
 
 }
