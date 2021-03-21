@@ -4,9 +4,8 @@ import java.util.*;
 
 /**
  * 集合工具类
- * 
- * @author wang
  *
+ * @author wang
  */
 public class CollectionUtils {
 
@@ -68,10 +67,10 @@ public class CollectionUtils {
 
     /**
      * 判断集合是否为空
-     * 
+     *
      * @param collection 待判空的集合
+     * @param <T>        元素类型
      * @return true:集合为空，false:集合非空
-     * @param <T> 元素类型
      */
     public static <T> boolean isEmpty(final Collection<T> collection) {
 
@@ -80,10 +79,10 @@ public class CollectionUtils {
 
     /**
      * 判断集合是否不为空
-     * 
+     *
      * @param collection 待判空的集合
+     * @param <T>        元素类型
      * @return true:集合非空，false:集合为空
-     * @param <T> 元素类型
      */
     public static <T> boolean isNotEmpty(final Collection<T> collection) {
 
@@ -92,13 +91,12 @@ public class CollectionUtils {
 
     /**
      * 判断多个集合中是否有空集合
-     * 
+     *
      * @param colles 待判空的集合数组
+     * @param <T>    元素类型
      * @return true:有空集合，false:无空集合
-     * @param <T> 元素类型
      */
-    @SuppressWarnings("unchecked")
-    public static <T> boolean isAnyEmpty(final Collection<T>... colles) {
+    @SuppressWarnings("unchecked") public static <T> boolean isAnyEmpty(final Collection<T>... colles) {
 
         if (colles == null || colles.length == 0) {
             return true;
@@ -113,13 +111,12 @@ public class CollectionUtils {
 
     /**
      * 判断多个集合中是否全部为空
-     * 
+     *
      * @param colles 待判空的集合数组
+     * @param <T>    元素类型
      * @return true:全部为空，false:有非空集合
-     * @param <T> 元素类型
      */
-    @SuppressWarnings("unchecked")
-    public static <T> boolean isAllEmpty(final Collection<T>... colles) {
+    @SuppressWarnings("unchecked") public static <T> boolean isAllEmpty(final Collection<T>... colles) {
 
         if (colles == null || colles.length == 0) {
             return true;
@@ -134,23 +131,22 @@ public class CollectionUtils {
 
     /**
      * 判断多个集合中是否全部不为空
-     * 
+     *
      * @param colles 待判空的集合数组
-     * @param <T> 元素类型
+     * @param <T>    元素类型
      * @return true:全部非空，false:有空集合
      */
-    @SuppressWarnings("unchecked")
-    public static <T> boolean isNoneEmpty(final Collection<T>... colles) {
+    @SuppressWarnings("unchecked") public static <T> boolean isNoneEmpty(final Collection<T>... colles) {
 
         return !isAnyEmpty(colles);
     }
 
     /**
      * 判断集合中是否存在某元素
-     * 
+     *
      * @param collection 集合
-     * @param obj 元素
-     * @param <T> 元素类型
+     * @param obj        元素
+     * @param <T>        元素类型
      * @return true:集合中包含该元素,false:集合为空或集合中不包含该元素
      */
     public static <T> boolean contains(final Collection<T> collection, final T obj) {
@@ -159,12 +155,11 @@ public class CollectionUtils {
     }
 
     /**
-     * 
      * 判断某集合元素中是否全部存在于另一个集合中
-     * 
-     * @param collection 集合1
+     *
+     * @param collection  集合1
      * @param collection2 集合2
-     * @param <T> 元素类型
+     * @param <T>         元素类型
      * @return true:集合1包含集合2中的所有元素，false:集合1为空或集合1不包含集合2中的所有元素
      */
     public static <T> boolean contains(final Collection<T> collection, final Collection<T> collection2) {
@@ -174,14 +169,14 @@ public class CollectionUtils {
 
     /**
      * 取两个集合的交集
-     * 
+     *
      * @param colle1 集合1
      * @param colle2 集合2
-     * @param <T> 元素类型
+     * @param <T>    元素类型
      * @return Collection 拥有集合1和集合2中都包含的元素的集合
      */
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<T> intersect(final Collection<T> colle1, final Collection<T> colle2) {
+    @SuppressWarnings("unchecked") public static <T> Collection<T> intersect(final Collection<T> colle1,
+        final Collection<T> colle2) {
 
         List<T> newColle = new ArrayList<>();
         if (isAnyEmpty(colle1, colle2)) {
@@ -200,14 +195,14 @@ public class CollectionUtils {
 
     /**
      * 取两个集合的并集
-     * 
+     *
      * @param colle1 集合1
      * @param colle2 集合2
-     * @param <T> 元素类型
+     * @param <T>    元素类型
      * @return Collection 拥有集合1和集合2中所有元素的集合
      */
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<T> union(final Collection<T> colle1, final Collection<T> colle2) {
+    @SuppressWarnings("unchecked") public static <T> Collection<T> union(final Collection<T> colle1,
+        final Collection<T> colle2) {
 
         if (isAnyEmpty(colle1, colle2)) {
             return new ArrayList<>();
@@ -229,11 +224,11 @@ public class CollectionUtils {
      *
      * @param colle1 集合1
      * @param colle2 集合2
-     * @param <T> 元素类型
+     * @param <T>    元素类型
      * @return Collection 拥有集合1有但集合2没有以及集合2有但集合1没有的元素的集合
      */
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<T> diff(final Collection<T> colle1, final Collection<T> colle2) {
+    @SuppressWarnings("unchecked") public static <T> Collection<T> diff(final Collection<T> colle1,
+        final Collection<T> colle2) {
 
         List<T> newColle = new ArrayList<>();
         if (isAnyEmpty(colle1, colle2)) {
@@ -257,14 +252,14 @@ public class CollectionUtils {
 
     /**
      * 过滤集合中的指定元素
-     * 
+     *
      * @param collection 集合
-     * @param objs 元素数组
-     * @param <T> 元素类型
+     * @param objs       元素数组
+     * @param <T>        元素类型
      * @return 过滤了集合中的指定元素的集合
      */
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<T> filter(final Collection<T> collection, final T... objs) {
+    @SuppressWarnings("unchecked") public static <T> Collection<T> filter(final Collection<T> collection,
+        final T... objs) {
 
         if (isNotEmpty(collection) && objs != null) {
             List<T> elements = Arrays.asList(objs);
@@ -276,11 +271,11 @@ public class CollectionUtils {
 
     /**
      * 将集合切割为指定size大小的多个组
-     * 
+     *
      * @param collection 集合
-     * @param size 每个list指定的大小
-     * @param <T> 元素类型
-     * @return  List<Collection<T>> 切割好的指定size的集合组成的list
+     * @param size       每个list指定的大小
+     * @param <T>        元素类型
+     * @return List<Collection < T>> 切割好的指定size的集合组成的list
      */
     public static <T> List<Collection<T>> split(final Collection<T> collection, final int size) {
 

@@ -8,9 +8,8 @@ import java.util.Date;
 
 /**
  * 线程安全的日期转换工具类
- * 
- * @author wang
  *
+ * @author wang
  */
 public class DateUtils {
 
@@ -51,7 +50,8 @@ public class DateUtils {
 
     private static ThreadLocal<DateFormat> threadLocal = new ThreadLocal<DateFormat>();
 
-    private DateUtils() {}
+    private DateUtils() {
+    }
 
     private static DateFormat getDateFormat() {
 
@@ -88,7 +88,7 @@ public class DateUtils {
 
     /**
      * 日期转换为字符串格式化输出 2018-12-12 12:00:00
-     * 
+     *
      * @param date 要格式化的date
      * @return 指定格式的字符串
      */
@@ -100,7 +100,7 @@ public class DateUtils {
 
     /**
      * 时间毫秒数转换为字符串格式化输出 2018-12-12 12:00:00
-     * 
+     *
      * @param timeMills 要格式化的long型毫秒时间戳
      * @return 指定格式的字符串
      */
@@ -111,8 +111,8 @@ public class DateUtils {
 
     /**
      * 日期转换为指定格式字符串输出
-     * 
-     * @param date 要格式化的日期
+     *
+     * @param date       要格式化的日期
      * @param dateFormat 日期要格式化的格式
      * @return 指定格式的字符串
      */
@@ -128,8 +128,8 @@ public class DateUtils {
 
     /**
      * 时间毫秒数转换为指定格式字符串输出
-     * 
-     * @param timeMills 要格式化的long型毫秒时间戳
+     *
+     * @param timeMills  要格式化的long型毫秒时间戳
      * @param dateFormat 日期要格式化的格式
      * @return 指定格式的字符串
      */
@@ -144,7 +144,7 @@ public class DateUtils {
 
     /**
      * 形如2018-12-12 12:00:00格式的字符串转换为日期
-     * 
+     *
      * @param dateStr 日期字符串
      * @return 解析后的日期date
      */
@@ -159,8 +159,8 @@ public class DateUtils {
 
     /**
      * 字符串按照指定格式转换为日期
-     * 
-     * @param dateStr 日期字符串
+     *
+     * @param dateStr    日期字符串
      * @param dateFormat 日期字符串的格式
      * @return 解析后的日期date
      */
@@ -180,7 +180,7 @@ public class DateUtils {
 
     /**
      * 日期加year年后的时间
-     * 
+     *
      * @param date 要操作的日期
      * @param year 年
      * @return 新的日期
@@ -193,7 +193,7 @@ public class DateUtils {
     /**
      * 日期加month月后的时间
      *
-     * @param date 要操作的日期
+     * @param date  要操作的日期
      * @param month 月
      * @return 新的日期
      */
@@ -204,9 +204,9 @@ public class DateUtils {
 
     /**
      * 日期加day天后的时间
-     * 
+     *
      * @param date 要操作的日期
-     * @param day 日
+     * @param day  日
      * @return 新的日期
      */
     public static Date plusDays(final Date date, final int day) {
@@ -216,7 +216,7 @@ public class DateUtils {
 
     /**
      * 日期加hour小时后的时间
-     * 
+     *
      * @param date 要操作的日期
      * @param hour 小时
      * @return 新的日期
@@ -228,8 +228,8 @@ public class DateUtils {
 
     /**
      * 日期加minute分后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date   要操作的日期
      * @param minute 分钟
      * @return 新的日期
      */
@@ -240,8 +240,8 @@ public class DateUtils {
 
     /**
      * 日期加second秒后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date   要操作的日期
      * @param second 秒
      * @return 新的日期
      */
@@ -252,8 +252,8 @@ public class DateUtils {
 
     /**
      * 日期加millSecond毫秒后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date        要操作的日期
      * @param milliSecond 毫秒
      * @return 新的日期
      */
@@ -264,7 +264,7 @@ public class DateUtils {
 
     /**
      * 日期减year年后的时间
-     * 
+     *
      * @param date 要操作的日期
      * @param year 年
      * @return 新的日期
@@ -276,8 +276,8 @@ public class DateUtils {
 
     /**
      * 日期减month月后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date  要操作的日期
      * @param month 月
      * @return 新的日期
      */
@@ -288,9 +288,9 @@ public class DateUtils {
 
     /**
      * 日期减day天后的时间
-     * 
+     *
      * @param date 要操作的日期
-     * @param day 日
+     * @param day  日
      * @return 新的日期
      */
     public static Date minusDays(final Date date, final int day) {
@@ -300,7 +300,7 @@ public class DateUtils {
 
     /**
      * 日期减hour小时后的时间
-     * 
+     *
      * @param date 要操作的日期
      * @param hour 小时
      * @return 新的日期
@@ -312,8 +312,8 @@ public class DateUtils {
 
     /**
      * 日期减minute分后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date   要操作的日期
      * @param minute 分钟
      * @return 新的日期
      */
@@ -324,8 +324,8 @@ public class DateUtils {
 
     /**
      * 日期减second秒后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date   要操作的日期
      * @param second 秒
      * @return 新的日期
      */
@@ -336,8 +336,8 @@ public class DateUtils {
 
     /**
      * 日期减millSecond毫秒后的时间
-     * 
-     * @param date 要操作的日期
+     *
+     * @param date        要操作的日期
      * @param milliSecond 毫秒
      * @return 新的日期
      */
@@ -348,7 +348,7 @@ public class DateUtils {
 
     /**
      * 获取一天中的开始,如2018-12-12 00:00:00
-     * 
+     *
      * @param date 要操作的日期
      * @return 一天中的0时0分0秒的时间
      */
@@ -368,7 +368,7 @@ public class DateUtils {
 
     /**
      * 获取一月中的开始,如2018-12-01 00:00:00
-     * 
+     *
      * @param date 要操作的日期
      * @return 一个月中1日0时0分0秒的时间
      */
@@ -389,7 +389,7 @@ public class DateUtils {
 
     /**
      * 获取一天中的结束,如2018-12-12 23:59:59
-     * 
+     *
      * @param date 要操作的日期
      * @return 一天中的23时59分59秒的时间
      */
@@ -409,7 +409,7 @@ public class DateUtils {
 
     /**
      * 获取一月中的结束,如2018-12-31 23:59:59
-     * 
+     *
      * @param date 要操作的日期
      * @return 一个月中最后一天23时59分59秒的时间
      */
@@ -433,7 +433,7 @@ public class DateUtils {
      * <p>
      * 1-7分别代表周一到周日
      * </p>
-     * 
+     *
      * @param date 要操作的日期
      * @return 1-7 分别代表周一到周日
      */
@@ -453,7 +453,7 @@ public class DateUtils {
 
     /**
      * 比较两个时间的大小,相等时返回0,date1>date2时返回1,date1<date2时返回-1
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return 0:两个时间相同，1:时间1在时间2之后，-1:时间1在时间2之前
@@ -469,7 +469,7 @@ public class DateUtils {
 
     /**
      * 两个时间是否相同
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return true:两个时间相同，false:两个时间不同
@@ -483,7 +483,7 @@ public class DateUtils {
 
     /**
      * 两个时间是否同一年
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return true:两个时间同年，false:两个时间不同年
@@ -498,13 +498,13 @@ public class DateUtils {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
-        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA)
-            && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
+        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA) && calendar1.get(Calendar.YEAR) == calendar2
+            .get(Calendar.YEAR);
     }
 
     /**
      * 两个时间是否同一个月
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return true:两个时间同年同月，false:两个时间不是同年同月
@@ -518,15 +518,14 @@ public class DateUtils {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
-        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA)
-            && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
-            && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH);
+        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA) && calendar1.get(Calendar.YEAR) == calendar2
+            .get(Calendar.YEAR) && calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH);
 
     }
 
     /**
      * 两个时间是否同一天
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return true:两个时间同年同月同日，false:两个时间不是同年同月同日
@@ -540,15 +539,14 @@ public class DateUtils {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
-        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA)
-            && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
-            && calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
+        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA) && calendar1.get(Calendar.YEAR) == calendar2
+            .get(Calendar.YEAR) && calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR);
 
     }
 
     /**
      * 两个时间是否同一小时
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return true:两个时间同年同月同日同小时，false:两个时间不是同年同月同日同小时
@@ -562,15 +560,14 @@ public class DateUtils {
         Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
-        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA)
-            && calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR)
-            && calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR)
+        return calendar1.get(Calendar.ERA) == calendar2.get(Calendar.ERA) && calendar1.get(Calendar.YEAR) == calendar2
+            .get(Calendar.YEAR) && calendar1.get(Calendar.DAY_OF_YEAR) == calendar2.get(Calendar.DAY_OF_YEAR)
             && calendar1.get(Calendar.HOUR_OF_DAY) == calendar2.get(Calendar.HOUR_OF_DAY);
     }
 
     /**
      * 两个时间是否同一分钟
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return true:两个时间同年同月同日同小时，false:两个时间不是同年同月同日同小时
@@ -593,7 +590,7 @@ public class DateUtils {
 
     /**
      * 两个时间相差多少年(假设一年365天)
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return int 两个时间相差的年份
@@ -606,7 +603,7 @@ public class DateUtils {
 
     /**
      * 两个时间相差多少天
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return int 两个时间相差的天数
@@ -619,7 +616,7 @@ public class DateUtils {
 
     /**
      * 两个时间相差多少小时
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return int 两个时间相差的小时数
@@ -632,7 +629,7 @@ public class DateUtils {
 
     /**
      * 两个时间相差多少分钟
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return int 两个时间相差的分钟数
@@ -645,7 +642,7 @@ public class DateUtils {
 
     /**
      * 两个时间相差多少秒
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return int 两个时间相差的秒数
@@ -658,7 +655,7 @@ public class DateUtils {
 
     /**
      * 两个时间相差多少毫秒
-     * 
+     *
      * @param date1 日期1
      * @param date2 日期2
      * @return long 两个时间相差的毫秒数

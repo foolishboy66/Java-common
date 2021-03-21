@@ -52,7 +52,8 @@ public class HttpUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpUtils.class);
 
-    private HttpUtils() {}
+    private HttpUtils() {
+    }
 
     private final static CloseableHttpClient HTTP_CLIENT;
 
@@ -144,10 +145,10 @@ public class HttpUtils {
     /**
      * 发送get请求
      *
-     * @param url 请求地址
-     * @param describe 描述信息
+     * @param url          请求地址
+     * @param describe     描述信息
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T get(String url, String describe, TypeReference<T> responseType) {
@@ -158,12 +159,12 @@ public class HttpUtils {
     /**
      * 发送get请求,控制是否打印请求参数以及响应
      *
-     * @param url 请求地址
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T get(String url, String describe, boolean logRequest, boolean logResponse,
@@ -175,13 +176,13 @@ public class HttpUtils {
     /**
      * 发送带有请求头的get请求
      *
-     * @param url 请求地址
-     * @param header 请求头map
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param header       请求头map
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T get(String url, Map<String, String> header, String describe, boolean logRequest,
@@ -193,14 +194,14 @@ public class HttpUtils {
     /**
      * 发送带有请求头的get请求,会将参数拼接到url上
      *
-     * @param url 请求地址
-     * @param args 请求参数map
-     * @param header 请求头map
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param args         请求参数map
+     * @param header       请求头map
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T get(String url, Map<String, String> args, Map<String, String> header, String describe,
@@ -216,11 +217,11 @@ public class HttpUtils {
     /**
      * 发送post请求
      *
-     * @param url 请求地址
-     * @param entity 请求参数实体类
-     * @param describe 描述信息
+     * @param url          请求地址
+     * @param entity       请求参数实体类
+     * @param describe     描述信息
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T post(String url, Object entity, String describe, TypeReference<T> responseType) {
@@ -231,13 +232,13 @@ public class HttpUtils {
     /**
      * 发送post请求,控制是否打印请求体以及响应
      *
-     * @param url 请求地址
-     * @param entity 请求参数实体类
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param entity       请求参数实体类
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T post(String url, Object entity, String describe, boolean logRequest, boolean logResponse,
@@ -249,14 +250,14 @@ public class HttpUtils {
     /**
      * 发送带有请求头的post请求
      *
-     * @param url 请求地址
-     * @param entity 请求参数实体类
-     * @param header 请求头map
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param entity       请求参数实体类
+     * @param header       请求头map
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T post(String url, Object entity, Map<String, String> header, String describe, boolean logRequest,
@@ -272,10 +273,10 @@ public class HttpUtils {
     /**
      * 发送delete请求
      *
-     * @param url 请求地址
-     * @param describe 描述信息
+     * @param url          请求地址
+     * @param describe     描述信息
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T delete(String url, String describe, TypeReference<T> responseType) {
@@ -286,12 +287,12 @@ public class HttpUtils {
     /**
      * 发送delete请求,控制是否打印请求参数以及响应
      *
-     * @param url 请求地址
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T delete(String url, String describe, boolean logRequest, boolean logResponse,
@@ -303,13 +304,13 @@ public class HttpUtils {
     /**
      * 发送带有请求头的delete请求
      *
-     * @param url 请求地址
-     * @param header 请求头map
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param header       请求头map
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T delete(String url, Map<String, String> header, String describe, boolean logRequest,
@@ -321,14 +322,14 @@ public class HttpUtils {
     /**
      * 发送带有请求头的delete请求,会将参数拼接到url上
      *
-     * @param url 请求地址
-     * @param args 请求参数map
-     * @param header 请求头map
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param args         请求参数map
+     * @param header       请求头map
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T delete(String url, Map<String, String> args, Map<String, String> header, String describe,
@@ -344,11 +345,11 @@ public class HttpUtils {
     /**
      * 发送put请求
      *
-     * @param url 请求地址
-     * @param entity 请求参数实体类
-     * @param describe 描述信息
+     * @param url          请求地址
+     * @param entity       请求参数实体类
+     * @param describe     描述信息
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T put(String url, Object entity, String describe, TypeReference<T> responseType) {
@@ -359,13 +360,13 @@ public class HttpUtils {
     /**
      * 发送put请求,控制是否打印请求体以及响应
      *
-     * @param url 请求地址
-     * @param entity 请求参数实体类
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param entity       请求参数实体类
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T put(String url, Object entity, String describe, boolean logRequest, boolean logResponse,
@@ -377,14 +378,14 @@ public class HttpUtils {
     /**
      * 发送带有请求头的put请求
      *
-     * @param url 请求地址
-     * @param entity 请求参数实体类
-     * @param header 请求头map
-     * @param describe 描述信息
-     * @param logRequest 是否打印请求
-     * @param logResponse 是否打印响应
+     * @param url          请求地址
+     * @param entity       请求参数实体类
+     * @param header       请求头map
+     * @param describe     描述信息
+     * @param logRequest   是否打印请求
+     * @param logResponse  是否打印响应
      * @param responseType 返回类型
-     * @param <T> 返回对象类型
+     * @param <T>          返回对象类型
      * @return T 响应反序列化的实体对象
      */
     public static <T> T put(String url, Object entity, Map<String, String> header, String describe, boolean logRequest,
@@ -557,18 +558,15 @@ public class HttpUtils {
 
     private static class MyX509TrustManager implements X509TrustManager {
 
-        @Override
-        public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
+        @Override public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
 
         }
 
-        @Override
-        public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
+        @Override public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
 
         }
 
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
+        @Override public X509Certificate[] getAcceptedIssuers() {
 
             return new X509Certificate[0];
         }

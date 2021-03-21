@@ -7,9 +7,8 @@ import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * 字符串工具类
- * 
- * @author wang
  *
+ * @author wang
  */
 public class StringUtils {
 
@@ -22,11 +21,11 @@ public class StringUtils {
 
     /**
      * 判断一个字符序列是否为空
-     * 
+     *
      * <p>
      * 为null或""时返回true
      * </p>
-     * 
+     *
      * @param cs 待判空的字符串
      * @return true:字符串为空，false:字符串非空
      */
@@ -37,11 +36,11 @@ public class StringUtils {
 
     /**
      * 判断一个字符序列是否为空
-     * 
+     *
      * <p>
      * 不为null且不为""时返回true
      * </p>
-     * 
+     *
      * @param cs 待判空的字符串
      * @return true:字符串非空，false:字符串为空
      */
@@ -52,11 +51,11 @@ public class StringUtils {
 
     /**
      * 判断多个字符序列中是否存在为空的序列
-     * 
+     *
      * <p>
      * 任意一个字符序列为空(null或"")时返回true
      * </p>
-     * 
+     *
      * @param css 待判空的字符串数组
      * @return true:至少有一个字符串为空，false:所有字符串非空
      */
@@ -75,11 +74,11 @@ public class StringUtils {
 
     /**
      * 判断多个字符序列是否全不为空
-     * 
+     *
      * <p>
      * 全部字符序列都不为null且不为""时返回true
      * </p>
-     * 
+     *
      * @param css 待判空的字符串数组
      * @return true:所有字符串非空，false:至少有一个字符串为空
      */
@@ -90,11 +89,11 @@ public class StringUtils {
 
     /**
      * 判断一个字符序列是否为空
-     * 
+     *
      * <p>
      * 为null或空串" "时返回true
      * </p>
-     * 
+     *
      * @param cs 待判空的字符串
      * @return true:字符串为空串，false:字符串为非空串
      */
@@ -114,11 +113,11 @@ public class StringUtils {
 
     /**
      * 判断一个字符序列是否为空
-     * 
+     *
      * <p>
      * 不为null且不为空串" "时返回true
      * </p>
-     * 
+     *
      * @param cs 待判空的字符串
      * @return true:字符串为非空串，false:字符串为空串
      */
@@ -129,11 +128,11 @@ public class StringUtils {
 
     /**
      * 判断多个字符序列中是否存在为空的序列
-     * 
+     *
      * <p>
      * 任意一个字符序列为空(null或空串" ")时返回true
      * </p>
-     * 
+     *
      * @param css 待判空的字符串数组
      * @return true:有空串，false:无空串
      */
@@ -152,11 +151,11 @@ public class StringUtils {
 
     /**
      * 判断多个字符序列是否全不为空
-     * 
+     *
      * <p>
      * 全部字符序列都不为null且不为空串" "时返回true
      * </p>
-     * 
+     *
      * @param css 待判空的字符串数组
      * @return true:无空串，false:有空串
      */
@@ -167,7 +166,7 @@ public class StringUtils {
 
     /**
      * 删除字符串中出现的所有空格以及制表符
-     * 
+     *
      * @param str 要删除的字符串
      * @return 去空格以及制表符的新字符串
      */
@@ -193,8 +192,8 @@ public class StringUtils {
 
     /**
      * 将可被迭代对象(list、array、set等)的迭代器中元素用分隔符连接起来
-     * 
-     * @param iterator 可被迭代的对象
+     *
+     * @param iterator  可被迭代的对象
      * @param separator 分隔符
      * @return 用分隔符连接起来的字符串
      */
@@ -228,8 +227,8 @@ public class StringUtils {
 
     /**
      * 将可被迭代的对象(list、array、set等)用分隔符连接起来
-     * 
-     * @param it 可被迭代的字符序列对象
+     *
+     * @param it        可被迭代的字符序列对象
      * @param separator 分隔符
      * @return 用分隔符连接起来的字符串
      */
@@ -264,8 +263,8 @@ public class StringUtils {
 
     /**
      * 返回字符串指定index左边的部分
-     * 
-     * @param str 要操作的字符串
+     *
+     * @param str   要操作的字符串
      * @param index 下标
      * @return 字符串指定index左边的部分
      */
@@ -284,8 +283,8 @@ public class StringUtils {
 
     /**
      * 返回字符串最早出现指定子串左边的部分
-     * 
-     * @param str 要操作的字符串
+     *
+     * @param str       要操作的字符串
      * @param separator 子串
      * @return 字符串最早出现指定子串左边的部分
      */
@@ -302,7 +301,7 @@ public class StringUtils {
     /**
      * 返回字符串最晚出现指定子串左边的部分
      *
-     * @param str 要操作的字符串
+     * @param str       要操作的字符串
      * @param separator 子串
      * @return 字符串最晚出现指定子串左边的部分
      */
@@ -318,8 +317,8 @@ public class StringUtils {
 
     /**
      * 返回字符串指定index右边的部分
-     * 
-     * @param str 要操作的字符串
+     *
+     * @param str   要操作的字符串
      * @param index 下标
      * @return 字符串指定index右边的部分
      */
@@ -338,8 +337,8 @@ public class StringUtils {
 
     /**
      * 返回字符串最早出现指定子串右边的部分
-     * 
-     * @param str 要操作的字符串
+     *
+     * @param str       要操作的字符串
      * @param separator 子串
      * @return 字符串最早出现指定子串右边的部分
      */
@@ -360,8 +359,8 @@ public class StringUtils {
 
     /**
      * 返回字符串最晚出现指定子串右边的部分
-     * 
-     * @param str 要操作的字符串
+     *
+     * @param str       要操作的字符串
      * @param separator 子串
      * @return 字符串最晚出现指定子串右边的部分
      */
@@ -382,7 +381,7 @@ public class StringUtils {
 
     /**
      * 格式化字符串,将形如https://github.com/{0}/{1}字符串中的占位符替换为指定对象
-     * 
+     *
      * @param str 原始字符串
      * @param css 替换对象数组
      * @return 原始字符串占位符替换为指定对象的新字符串

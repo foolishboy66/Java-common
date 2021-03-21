@@ -33,8 +33,8 @@ public class BeanUtils {
     /**
      * 将source对象中的相同属性名的值复制到target对象中,可以忽略一部分属性
      *
-     * @param source 源对象
-     * @param target 目标对象
+     * @param source           源对象
+     * @param target           目标对象
      * @param ignoreProperties 忽略的属性数组
      */
     public static void copyProperties(final Object source, final Object target, final String... ignoreProperties) {
@@ -68,8 +68,7 @@ public class BeanUtils {
                     }
                 }
             }
-        } catch (IntrospectionException | IllegalAccessException | IllegalArgumentException
-            | InvocationTargetException e) {
+        } catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new RuntimeException("map不能转换为对象,caused by获取对象信息失败!");
         }
     }
@@ -102,8 +101,7 @@ public class BeanUtils {
                 }
                 map.put(name, val);
             }
-        } catch (IntrospectionException | IllegalAccessException | IllegalArgumentException
-            | InvocationTargetException e) {
+        } catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new RuntimeException("对象不能转换为map,caused by获取对象信息失败!");
         }
 
